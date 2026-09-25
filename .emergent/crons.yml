@@ -1,0 +1,8 @@
+crons:
+  - name: appt-reminders
+    description: "Every 15 min: emails patients 24h and 1h appointment reminders"
+    cron: "*/15 * * * *"
+    endpoint: "{{BASE_URL}}/api/cron/reminders"
+    method: POST
+    # Cron endpoints must ack 2xx immediately; enqueue/background the actual work.
+    enabled: true

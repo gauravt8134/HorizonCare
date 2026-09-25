@@ -3,6 +3,7 @@ import { Play, CheckCircle2, UserX, History, Star, IndianRupee, Users, CalendarD
 import { api, errMsg, fmtDate, fmtTime, inr, todayISO } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import { PrescriptionForm } from "@/components/PrescriptionForm";
+import { RecordsPanel } from "@/components/RecordsPanel";
 import { StatCard, StatusBadge, PageHeader, EmptyState } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -160,6 +161,10 @@ export default function DoctorDashboard() {
               <div>
                 <div className="font-semibold text-slate-900 mb-2">Visits ({history.appointments.length})</div>
                 <div className="space-y-1.5">{history.appointments.slice(0, 10).map((a) => <div key={a.id} className="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2"><span>{fmtDate(a.date)} · Dr. {a.doctor_name} · {a.reason || "—"}</span><StatusBadge status={a.status} /></div>)}</div>
+              </div>
+              <div>
+                <div className="font-semibold text-slate-900 mb-2">Medical records</div>
+                <RecordsPanel patientId={history.patient.id} compact />
               </div>
             </div>
           )}

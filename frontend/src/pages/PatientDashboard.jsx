@@ -4,6 +4,7 @@ import { CalendarClock, FileText, Star, Download, RotateCcw, XCircle } from "luc
 import { api, errMsg, fmtDate, fmtTime, inr, todayISO } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import { QueueTokenCard } from "@/components/QueueTokenCard";
+import { RecordsPanel } from "@/components/RecordsPanel";
 import { SlotPicker } from "@/components/SlotPicker";
 import { StatusBadge, PageHeader, EmptyState } from "@/components/shared";
 import { Button } from "@/components/ui/button";
@@ -83,7 +84,9 @@ export default function PatientDashboard() {
         <TabsList className="rounded-full bg-slate-100 p-1">
           <TabsTrigger value="appointments" className="rounded-full" data-testid="tab-appointments">Appointments</TabsTrigger>
           <TabsTrigger value="prescriptions" className="rounded-full" data-testid="tab-prescriptions">Prescriptions ({rxs.length})</TabsTrigger>
+          <TabsTrigger value="records" className="rounded-full" data-testid="tab-records">Medical records</TabsTrigger>
         </TabsList>
+        <TabsContent value="records" className="mt-6"><RecordsPanel patientId={user.id} /></TabsContent>
         <TabsContent value="appointments" className="mt-6 space-y-8">
           <section>
             <h2 className="font-display text-lg font-bold text-slate-900 mb-3">Upcoming</h2>

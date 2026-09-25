@@ -94,6 +94,9 @@ async def ensure_indexes():
     await db.doctors.create_index([("hospital_id", 1), ("specialization_id", 1)])
     await db.prescriptions.create_index("appointment_id")
     await db.reviews.create_index("doctor_id")
+    await db.medical_records.create_index([("patient_id", 1), ("is_deleted", 1)])
+    await db.cron_runs.create_index("run_id", unique=True)
+    await db.notifications.create_index("appointment_id")
 
 
 async def seed_data():

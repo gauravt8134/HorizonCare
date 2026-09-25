@@ -4,6 +4,7 @@ import { api, fmtDate, fmtTime, inr, todayISO } from "@/lib/api";
 import { StatCard, StatusBadge, PageHeader, EmptyState } from "@/components/shared";
 import { Panel, AppointmentsChart, RevenueChart, DemandChart, Heatmap } from "@/components/admin/Charts";
 import { DoctorRoster } from "@/components/admin/DoctorRoster";
+import { HospitalManager } from "@/components/admin/HospitalManager";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -55,6 +56,7 @@ export default function AdminDashboard() {
         <TabsList className="rounded-full bg-slate-100 p-1">
           <TabsTrigger value="analytics" className="rounded-full" data-testid="tab-analytics">Analytics</TabsTrigger>
           <TabsTrigger value="doctors" className="rounded-full" data-testid="tab-doctors">Doctor roster</TabsTrigger>
+          <TabsTrigger value="hospitals" className="rounded-full" data-testid="tab-hospitals">Hospitals</TabsTrigger>
           <TabsTrigger value="appointments" className="rounded-full" data-testid="tab-admin-appointments">Appointments</TabsTrigger>
         </TabsList>
         <TabsContent value="analytics" className="mt-6 space-y-6">
@@ -81,6 +83,7 @@ export default function AdminDashboard() {
           </div>
         </TabsContent>
         <TabsContent value="doctors" className="mt-6"><DoctorRoster /></TabsContent>
+        <TabsContent value="hospitals" className="mt-6"><HospitalManager /></TabsContent>
         <TabsContent value="appointments" className="mt-6"><AppointmentsTable /></TabsContent>
       </Tabs>
     </main>

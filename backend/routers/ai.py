@@ -13,6 +13,37 @@ class SymptomIn(BaseModel):
     symptoms: str
 
 
+class FaqIn(BaseModel):
+    message: str
+    history: list[dict] = []
+
+
+FAQ_SYSTEM = ("You are the HorizonCare help assistant. HorizonCare lets patients find doctors across partner hospitals in "
+              "Mumbai, Pune and Bengaluru (filter by city → specialization → hospital → doctor), book time slots, check in to a "
+              "live queue with a token number, receive digital prescriptions (PDF), upload medical records, and rate doctors. "
+              "Appointments can be rescheduled or cancelled from the patient dashboard; doctors set weekly hours; email reminders "
+              "go out 24h and 1h before a visit. Answer ONLY questions about using HorizonCare or which medical specialization "
+              "fits a described concern. You must never diagnose, name conditions, or suggest treatments or medicines — if asked, "
+              "say you can only help pick a specialization and they should see a doctor. Keep answers under 80 words, friendly, plain text.")
+
+
+@router.post("/faq")
+async def faq(body: FaqIn):
+    text = body.message.strip()
+    if not text:
+        raise HTTPException(status_code=400, detail="Message cannot be empty")
+    context = "\n".join(f"{m.get('role', 'user')}: {m.get('content', '')}" for m in body.history[-6:])
+    chat = LlmChat(api_key=os.environ["EMERGENT_LLM_KEY"], session_id=f"faq-{new_id()}",
+                   system_message=FAQ_SYSTEM).with_model("anthropic", "claude-sonnet-4-6")
+    prompt = f"Conversation so far:\n{context}\n\nuser: {text}" if context else text
+    try:
+        reply = await chat.send_message(UserMessage(text=prompt))
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"AI service unavailable: {e}")
+    await db.ai_queries.insert_one({"id": new_id(), "kind": "faq", "message": text, "reply": reply, "created_at": now_iso()})
+    return {"reply": reply.strip()}
+
+
 @router.post("/symptom-check")
 async def symptom_check(body: SymptomIn):
     text = body.symptoms.strip()

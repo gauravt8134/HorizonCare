@@ -9,7 +9,7 @@ from fastapi import FastAPI, APIRouter
 from starlette.middleware.cors import CORSMiddleware
 from core import client
 from seed import seed_admin, ensure_indexes, seed_data
-from routers import auth, catalog, appointments, prescriptions, doctor, admin, ai
+from routers import auth, catalog, appointments, prescriptions, doctor, admin, ai, records, cron
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger("horizoncare")
@@ -28,7 +28,8 @@ async def health():
     return {"status": "ok"}
 
 
-for r in (auth.router, catalog.router, appointments.router, prescriptions.router, doctor.router, admin.router, ai.router):
+for r in (auth.router, catalog.router, appointments.router, prescriptions.router, doctor.router, admin.router, ai.router,
+          records.router, cron.router):
     api_router.include_router(r)
 app.include_router(api_router)
 
@@ -46,6 +47,11 @@ async def on_startup():
     await ensure_indexes()
     await seed_admin()
     await seed_data()
+    try:
+        await records.init_storage()
+        logger.info("Object storage initialized")
+    except Exception as e:
+        logger.error(f"Object storage init failed: {e}")
     logger.info("HorizonCare startup complete")
 
 

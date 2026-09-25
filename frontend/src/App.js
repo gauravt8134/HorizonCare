@@ -5,6 +5,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { Navbar } from "@/components/Navbar";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import AuthCallback from "@/components/AuthCallback";
+import { FaqChat } from "@/components/FaqChat";
 import Landing from "@/pages/Landing";
 import Doctors from "@/pages/Doctors";
 import DoctorProfile from "@/pages/DoctorProfile";
@@ -37,6 +38,7 @@ function AppRouter() {
           <span>AI suggestions are assistive only and never a substitute for a doctor.</span>
         </div>
       </footer>
+      <FaqChat />
     </>
   );
 }

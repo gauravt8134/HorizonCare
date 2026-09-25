@@ -1,9 +1,11 @@
+import asyncio
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 from pymongo import ReturnDocument
 from pymongo.errors import DuplicateKeyError
 from core import (db, new_id, now_iso, get_current_user, require_role, ACTIVE_STATUSES, generate_slots,
                   is_past_slot, slot_duration_for, today_str, audit)
+from notifications import notify
 
 router = APIRouter(tags=["appointments"])
 
@@ -80,7 +82,9 @@ async def book(body: BookIn, user: dict = Depends(require_role("patient"))):
         raise HTTPException(status_code=409, detail="This slot was just booked by someone else. Please pick another.")
     await audit(user["id"], "book", "appointment", appt["id"])
     appt.pop("_id", None)
-    return (await enrich_appointments([appt]))[0]
+    enriched = (await enrich_appointments([appt]))[0]
+    asyncio.create_task(notify("booking_confirmed", enriched))
+    return enriched
 
 
 @router.get("/appointments/me")
@@ -122,6 +126,8 @@ async def cancel(appt_id: str, user: dict = Depends(get_current_user)):
     await db.appointments.update_one({"id": appt_id}, {"$set": {"status": "cancelled", "cancelled_by": user["role"],
                                                                  "updated_at": now_iso()}})
     await audit(user["id"], "cancel", "appointment", appt_id)
+    enriched = (await enrich_appointments([{**appt, "status": "cancelled", "cancelled_by": user["role"]}]))[0]
+    asyncio.create_task(notify("cancelled", enriched))
     return {"ok": True, "status": "cancelled"}
 
 
@@ -139,10 +145,13 @@ async def reschedule(appt_id: str, body: RescheduleIn, user: dict = Depends(get_
     try:
         await db.appointments.update_one({"id": appt_id}, {"$set": {"date": body.date, "time": body.time,
                                                                      "token_number": token, "status": "confirmed",
+                                                                     "reminder_24h_sent": False, "reminder_1h_sent": False,
                                                                      "rescheduled_by": user["role"], "updated_at": now_iso()}})
     except DuplicateKeyError:
         raise HTTPException(status_code=409, detail="Slot already booked")
     await audit(user["id"], "reschedule", "appointment", appt_id)
+    enriched = (await enrich_appointments([{**appt, "date": body.date, "time": body.time, "token_number": token}]))[0]
+    asyncio.create_task(notify("rescheduled", enriched))
     return {"ok": True, "date": body.date, "time": body.time, "token_number": token}
 
 
