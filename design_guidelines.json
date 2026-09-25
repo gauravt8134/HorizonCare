@@ -1,0 +1,168 @@
+{
+  "project_name": "HorizonCare — Multi-Hospital Patient Management System",
+  "archetype": "Clean Clinical & Swiss Precision Hybrid",
+  "theme": {
+    "default": "light",
+    "toggle_supported": true,
+    "description": "Crisp clinical light surface with clinical teal/emerald primary accents, high-contrast slate typography, and soft warm-grey/mint secondary backgrounds."
+  },
+  "colors": {
+    "primary": {
+      "DEFAULT": "hsl(173, 80%, 32%)",
+      "hover": "hsl(173, 84%, 26%)",
+      "light": "hsl(172, 66%, 95%)",
+      "hex": "#0D9488"
+    },
+    "secondary": {
+      "DEFAULT": "hsl(199, 89%, 48%)",
+      "hover": "hsl(199, 89%, 40%)",
+      "light": "hsl(199, 89%, 96%)",
+      "hex": "#0284C7"
+    },
+    "accent_mint": "#10B981",
+    "accent_amber": "#F59E0B",
+    "accent_rose": "#F43F5E",
+    "background": {
+      "light": "#F8FAFC",
+      "card_light": "#FFFFFF",
+      "sidebar_light": "#F1F5F9",
+      "dark": "#0B132B",
+      "card_dark": "#1C2541"
+    },
+    "foreground": {
+      "heading": "#0F172A",
+      "body": "#334155",
+      "muted": "#64748B"
+    },
+    "borders": {
+      "subtle": "#E2E8F0",
+      "active": "#99F6E4",
+      "dark_subtle": "#1E293B"
+    },
+    "chart_colors": [
+      "#0D9488",
+      "#0284C7",
+      "#8B5CF6",
+      "#F59E0B",
+      "#10B981",
+      "#EC4899"
+    ]
+  },
+  "typography": {
+    "font_family_heading": "'Plus Jakarta Sans', 'Outfit', sans-serif",
+    "font_family_body": "'DM Sans', 'Inter', sans-serif",
+    "font_family_mono": "'JetBrains Mono', monospace",
+    "scale": {
+      "h1": "text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight",
+      "h2": "text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight",
+      "h3": "text-xl sm:text-2xl font-semibold tracking-normal",
+      "h4": "text-lg sm:text-xl font-semibold",
+      "body_lg": "text-lg text-slate-700 leading-relaxed",
+      "body_base": "text-base text-slate-600 leading-normal",
+      "body_sm": "text-sm text-slate-500",
+      "caption": "text-xs font-medium uppercase tracking-widest text-teal-700"
+    }
+  },
+  "layout_and_spacing": {
+    "container_padding": "px-4 sm:px-8 lg:px-12 max-w-7xl mx-auto",
+    "section_spacing": "py-12 sm:py-20 lg:py-24",
+    "card_padding": "p-6 sm:p-8",
+    "bento_grid": {
+      "landing_features": "grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8",
+      "dashboard_kpi": "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5",
+      "admin_analytics": "grid grid-cols-1 lg:grid-cols-3 gap-6"
+    }
+  },
+  "component_design_specs": {
+    "navigation_bar": {
+      "style": "Sticky top-0 z-50 backdrop-blur-xl bg-white/85 border-b border-slate-200/80 shadow-sm",
+      "elements": [
+        "Brand Logo with Teal Cross/Shield Icon",
+        "Role Selector (Patient / Doctor / Admin / Demo Switcher)",
+        "Navigation Links: Find Doctors, Hospitals, Queue Token, Prescriptions, AI Diagnostic Assistant",
+        "Emergency Hotline Badge (24/7 Priority Support)",
+        "User Profile Dropdown / Login Button"
+      ]
+    },
+    "hero_section": {
+      "style": "Relative min-h-[540px] flex items-center bg-gradient-to-br from-teal-50/70 via-white to-sky-50/50 rounded-3xl my-4 overflow-hidden border border-teal-100/60 p-8 sm:p-12",
+      "features": [
+        "Dynamic Location -> Specialization -> Hospital -> Doctor Search Chain",
+        "AI Symptom-to-Specialization Instant Magic Assistant Bar",
+        "Quick Metrics Pill Badges (50+ Partner Hospitals, 1,200+ Verified Doctors, <12 min Queue Time)"
+      ]
+    },
+    "doctor_card": {
+      "style": "bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-teal-300 transition-all duration-200 overflow-hidden flex flex-col justify-between p-6",
+      "badge": "Specialization pill with soft green background (bg-emerald-50 text-emerald-700)",
+      "elements": ["Doctor Avatar", "Rating & Reviews", "Experience & Hospital Name", "Consultation Fee", "Next Available Slot Badge", "Book Appointment Button"]
+    },
+    "live_queue_token": {
+      "style": "bg-gradient-to-r from-teal-900 via-teal-800 to-slate-900 text-white rounded-2xl p-6 shadow-xl relative overflow-hidden",
+      "elements": ["Live Serving Token Number (Animated pulse)", "Patient's Token Number", "Estimated Wait Time counter", "Live Hospital Room / Desk indicator", "Cancel / Re-queue actions"]
+    },
+    "admin_dashboard_widgets": {
+      "kpi_cards": "Flat cards with top accent color border, trend indicator (green up arrow / red down), clean mono metrics",
+      "peak_hour_heatmap": "7x12 matrix grid showing hourly patient load density from 8 AM to 8 PM across days of the week",
+      "doctor_performance_table": "Dense data table with sortable columns, availability status badge, total consultations, and average rating star rating"
+    }
+  },
+  "image_urls": [
+    {
+      "category": "hero_banner",
+      "description": "Modern hospital emergency room entrance with sleek clinical aesthetic",
+      "url": "https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+    },
+    {
+      "category": "hospital_facade",
+      "description": "State-of-the-art medical center building exterior",
+      "url": "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTZ8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBob3NwaXRhbCUyMGJ1aWxkaW5nJTIwZXh0ZXJpb3IlMjBhcmNoaXRlY3R1cmV8ZW58MHx8fHwxNzkwMzQxMjkwfDA&ixlib=rb-4.1.0&q=85"
+    },
+    {
+      "category": "doctor_male_1",
+      "description": "Senior Cardiology Specialist Portrait",
+      "url": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTZ8MHwxfHNlYXJjaHwxfHxkb2N0b3IlMjBtZWRpY2FsJTIwaGVhbHRoY2FyZSUyMHByb2Zlc3Npb25hbCUyMHBvcnRyYWl0JTIwd2hpdGUlMjBiYWNrZ3JvdW5kfGVufDB8fHx8MTc5MDM0MTI4MHww&ixlib=rb-4.1.0&q=85"
+    },
+    {
+      "category": "doctor_female_1",
+      "description": "Lead Neurologist & Pediatrics Specialist",
+      "url": "https://images.pexels.com/photos/32254665/pexels-photo-32254665.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+    },
+    {
+      "category": "doctor_female_2",
+      "description": "Orthopedic Surgeon & General Physician",
+      "url": "https://images.unsplash.com/photo-1659353888906-adb3e0041693?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NzB8MHwxfHNlYXJjaHwxfHxmZW1hbGUlMjBkb2N0b3IlMjBwb3J0cmFpdCUyMGhlYWx0aGNhcmUlMjB3aGl0ZSUyMGxhYiUyMGNvYXR8ZW58MHx8fHwxNzkwMzQxMjkwfDA&ixlib=rb-4.1.0&q=85"
+    },
+    {
+      "category": "doctor_male_2",
+      "description": "Dermatology & Internal Medicine Consultant",
+      "url": "https://images.unsplash.com/photo-1612363584451-cd060fb62018?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTZ8MHwxfHNlYXJjaHw0fHxkb2N0b3IlMjBtZWRpY2FsJTIwaGVhbHRoY2FyZSUyMHByb2Zlc3Npb25hbCUyMHBvcnRyYWl0JTIwd2hpdGUlMjBiYWNrZ3JvdW5kfGVufDB8fHx8MTc5MDM0MTI4MHww&ixlib=rb-4.1.0&q=85"
+    }
+  ],
+  "accessibility_and_testing": {
+    "data_testid_rules": "All interactive elements (buttons, search inputs, dropdown filters, slot buttons, queue actions, role switches, prescription submit, modal triggers) MUST include descriptive kebab-case data-testid attributes.",
+    "key_test_ids": [
+      "navbar-role-switcher",
+      "search-location-select",
+      "search-specialization-select",
+      "search-hospital-select",
+      "ai-symptom-input",
+      "ai-symptom-submit-button",
+      "doctor-card-book-button",
+      "slot-date-picker",
+      "slot-time-chip",
+      "confirm-booking-button",
+      "patient-queue-token-card",
+      "doctor-availability-toggle",
+      "prescription-form-submit",
+      "admin-analytics-heatmap"
+    ]
+  },
+  "instructions_to_main_agent": [
+    "Build a portfolio-grade demo application with rich interactive state (mocked real-time queue ticker, slot booking modal, AI symptom analyzer, prescription builder).",
+    "Ensure all 3 roles (Patient, Doctor, Admin) can be seamlessly switched via a global Role Bar at the top of the app.",
+    "Use Recharts for Admin dashboard analytics charts (Appointments line chart, Specialization demand bar chart, Peak-hour heatmap matrix, Doctor KPIs).",
+    "Follow clean clinical visual rules: generous padding, soft slate borders, high text contrast, precise teal/emerald highlights.",
+    "Make sure every interactive element contains data-testid for end-to-end reliability."
+  ]
+}
