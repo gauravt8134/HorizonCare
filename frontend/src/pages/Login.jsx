@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 const DEMO = [
   { label: "Patient", email: "patient@horizoncare.com", password: "patient123" },
   { label: "Doctor", email: "dr.arjun@horizoncare.com", password: "doctor123" },
+  { label: "Admin", email: "thakaregaurav0911@gmail.com", password: "Admin@123" },
 ];
 
 function GoogleIcon() {
