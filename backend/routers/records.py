@@ -1,6 +1,7 @@
 import os
 import logging
-import httpx
+import boto3
+from botocore.exceptions import ClientError
 from cryptography.fernet import Fernet
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from fastapi.responses import Response
@@ -9,45 +10,36 @@ from core import db, new_id, now_iso, get_current_user, audit
 logger = logging.getLogger("horizoncare.records")
 router = APIRouter(prefix="/records", tags=["records"])
 
-STORAGE_BASE = (os.environ.get("INTEGRATION_PROXY_URL") or "").strip() or "https://integrations.emergentagent.com"
-STORAGE_URL = STORAGE_BASE.rstrip("/") + "/objstore/api/v1/storage"
 APP_NAME = "horizoncare"
 ALLOWED = {"application/pdf": "pdf", "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp"}
 MAX_BYTES = 10 * 1024 * 1024
 RECORD_TYPES = ["Lab report", "Imaging / scan", "Discharge summary", "Prescription (external)", "Vaccination", "Other"]
 
 fernet = Fernet(os.environ["RECORDS_ENCRYPTION_KEY"].encode())
-_storage_key: str | None = None
 
-
-async def init_storage(force: bool = False) -> str:
-    global _storage_key
-    if _storage_key and not force:
-        return _storage_key
-    async with httpx.AsyncClient(timeout=30) as client:
-        r = await client.post(f"{STORAGE_URL}/init", json={"emergent_key": os.environ["EMERGENT_LLM_KEY"]})
-    r.raise_for_status()
-    _storage_key = r.json()["storage_key"]
-    return _storage_key
+s3_client = boto3.client(
+    "s3",
+    aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+    aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],
+    region_name=os.environ.get("AWS_REGION", "ap-south-1"),
+)
+S3_BUCKET = os.environ["AWS_S3_BUCKET"]
 
 
 async def put_object(path: str, data: bytes, content_type: str) -> dict:
-    key = await init_storage()
-    async with httpx.AsyncClient(timeout=120) as client:
-        r = await client.put(f"{STORAGE_URL}/objects/{path}", headers={"X-Storage-Key": key, "Content-Type": content_type}, content=data)
-        if r.status_code == 404:
-            key = await init_storage(force=True)
-            r = await client.put(f"{STORAGE_URL}/objects/{path}", headers={"X-Storage-Key": key, "Content-Type": content_type}, content=data)
-    r.raise_for_status()
-    return r.json()
+    try:
+        s3_client.put_object(Bucket=S3_BUCKET, Key=path, Body=data, ContentType=content_type)
+        return {"path": path}
+    except ClientError as e:
+        raise Exception(f"S3 upload failed: {e}")
 
 
 async def get_object(path: str) -> bytes:
-    key = await init_storage()
-    async with httpx.AsyncClient(timeout=60) as client:
-        r = await client.get(f"{STORAGE_URL}/objects/{path}", headers={"X-Storage-Key": key})
-    r.raise_for_status()
-    return r.content
+    try:
+        response = s3_client.get_object(Bucket=S3_BUCKET, Key=path)
+        return response["Body"].read()
+    except ClientError as e:
+        raise Exception(f"S3 download failed: {e}")
 
 
 def enc(s: str) -> str:
