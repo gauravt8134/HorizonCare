@@ -12,10 +12,10 @@ logger = logging.getLogger("horizoncare.email")
 
 # Emergent managed email proxy — constant by design, never from env.
 EMAIL_BASE_URL = "https://integrations.emergentagent.com"
-EMAIL_KEY = os.environ["EMERGENT_EMAIL_KEY"]
-EMAIL_FROM_NAME = os.environ["EMAIL_FROM_NAME"]
+EMAIL_KEY = os.environ.get("EMERGENT_EMAIL_KEY")
+EMAIL_FROM_NAME = os.environ.get("EMAIL_FROM_NAME", "HorizonCare")
 EMAIL_REPLY_TO = os.environ.get("EMAIL_REPLY_TO")
-APP_URL = os.environ["APP_PUBLIC_URL"]
+APP_URL = os.environ.get("APP_PUBLIC_URL", "http://localhost:3000")
 
 _SHORTENERS = ("bit.ly", "tinyurl.com", "t.co", "is.gd", "cutt.ly", "goo.gl", "rebrand.ly")
 _CRED_ASK = ("reply with your password", "reply with the code", "send your password", "cvv",
@@ -153,6 +153,8 @@ TEMPLATES = {
 
 async def notify(kind: str, appt: dict):
     """Send a templated email for an enriched appointment; never raises."""
+    if not EMAIL_KEY:
+        return  # Notifications disabled — no email key configured
     to = appt.get("patient_email")
     if not to or kind not in TEMPLATES:
         return

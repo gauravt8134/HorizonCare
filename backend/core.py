@@ -6,6 +6,9 @@ from datetime import datetime, timezone, timedelta, date, time
 from zoneinfo import ZoneInfo
 from fastapi import Request, HTTPException, Response, Depends
 from motor.motor_asyncio import AsyncIOMotorClient
+from dotenv import load_dotenv
+
+load_dotenv()
 
 client = AsyncIOMotorClient(os.environ["MONGO_URL"])
 db = client[os.environ["DB_NAME"]]
