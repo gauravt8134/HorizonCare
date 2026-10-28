@@ -12,15 +12,23 @@ export function SearchChain({ value, onChange, onSearch, compact = false }) {
   const [hospitals, setHospitals] = useState([]);
   const { location = "", specialization = "", hospital = "" } = value;
 
-  useEffect(() => { api.get("/locations").then((r) => setLocations(r.data)); }, []);
   useEffect(() => {
-    api.get("/specializations", { params: location ? { location } : {} }).then((r) => setSpecs(r.data));
+    let active = true;
+    api.get("/locations").then((r) => { if (active) setLocations(r.data); }).catch(() => {});
+    return () => { active = false; };
+  }, []);
+  useEffect(() => {
+    let active = true;
+    api.get("/specializations", { params: location ? { location } : {} }).then((r) => { if (active) setSpecs(r.data); }).catch(() => {});
+    return () => { active = false; };
   }, [location]);
   useEffect(() => {
     const params = {};
     if (location) params.location = location;
     if (specialization) params.specialization = specialization;
-    api.get("/hospitals", { params }).then((r) => setHospitals(r.data));
+    let active = true;
+    api.get("/hospitals", { params }).then((r) => { if (active) setHospitals(r.data); }).catch(() => {});
+    return () => { active = false; };
   }, [location, specialization]);
 
   const set = (k, v) => {

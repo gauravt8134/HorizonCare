@@ -22,8 +22,13 @@ export default function Landing() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    api.get("/hospitals").then((r) => setHospitals(r.data));
-    api.get("/specializations").then((r) => setSpecs(r.data));
+    let active = true;
+    Promise.allSettled([api.get("/hospitals"), api.get("/specializations")]).then(([hospitalsResult, specsResult]) => {
+      if (!active) return;
+      if (hospitalsResult.status === "fulfilled") setHospitals(hospitalsResult.value.data);
+      if (specsResult.status === "fulfilled") setSpecs(specsResult.value.data);
+    });
+    return () => { active = false; };
   }, []);
 
   const search = () => {

@@ -3,7 +3,11 @@ import json
 import re
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from emergentintegrations.llm.chat import LlmChat, UserMessage
+try:
+    from emergentintegrations.llm.chat import LlmChat, UserMessage
+except ImportError:
+    LlmChat = None
+    UserMessage = None
 from core import db, new_id, now_iso
 
 router = APIRouter(prefix="/ai", tags=["ai"])
@@ -29,6 +33,8 @@ FAQ_SYSTEM = ("You are the HorizonCare help assistant. HorizonCare lets patients
 
 @router.post("/faq")
 async def faq(body: FaqIn):
+    if LlmChat is None or not os.getenv('EMERGENT_LLM_KEY'):
+        raise HTTPException(status_code=503, detail='AI assistant is not configured on this server')
     text = body.message.strip()
     if not text:
         raise HTTPException(status_code=400, detail="Message cannot be empty")
@@ -46,6 +52,8 @@ async def faq(body: FaqIn):
 
 @router.post("/symptom-check")
 async def symptom_check(body: SymptomIn):
+    if LlmChat is None or not os.getenv('EMERGENT_LLM_KEY'):
+        raise HTTPException(status_code=503, detail='AI assistant is not configured on this server')
     text = body.symptoms.strip()
     if len(text) < 5:
         raise HTTPException(status_code=400, detail="Please describe your symptoms in a little more detail")

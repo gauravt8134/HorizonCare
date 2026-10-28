@@ -17,16 +17,19 @@ RECORD_TYPES = ["Lab report", "Imaging / scan", "Discharge summary", "Prescripti
 
 fernet = Fernet(os.environ["RECORDS_ENCRYPTION_KEY"].encode())
 
-s3_client = boto3.client(
-    "s3",
-    aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
-    aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],
-    region_name=os.environ.get("AWS_REGION", "ap-south-1"),
-)
-S3_BUCKET = os.environ["AWS_S3_BUCKET"]
+S3_BUCKET = os.getenv("AWS_S3_BUCKET")
+AWS_STORAGE_AVAILABLE = all(os.getenv(key) for key in ("AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_S3_BUCKET"))
+s3_client = boto3.client("s3", aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"), aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"), region_name=os.getenv("AWS_REGION", "ap-south-1")) if AWS_STORAGE_AVAILABLE else None
+
+
+async def init_storage():
+    if not AWS_STORAGE_AVAILABLE:
+        logger.warning("AWS S3 is not configured; medical record upload/download is disabled")
 
 
 async def put_object(path: str, data: bytes, content_type: str) -> dict:
+    if not AWS_STORAGE_AVAILABLE:
+        raise RuntimeError('AWS S3 is not configured')
     try:
         s3_client.put_object(Bucket=S3_BUCKET, Key=path, Body=data, ContentType=content_type)
         return {"path": path}
@@ -35,6 +38,8 @@ async def put_object(path: str, data: bytes, content_type: str) -> dict:
 
 
 async def get_object(path: str) -> bytes:
+    if not AWS_STORAGE_AVAILABLE:
+        raise RuntimeError('AWS S3 is not configured')
     try:
         response = s3_client.get_object(Bucket=S3_BUCKET, Key=path)
         return response["Body"].read()

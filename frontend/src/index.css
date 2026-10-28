@@ -120,3 +120,7 @@ code, .font-mono {
         border-bottom-color: inherit;
     }
 }
+
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 3px solid rgba(13, 148, 136, 0.28); outline-offset: 2px; }
+.mobile-nav-link { width: 100%; display: flex; align-items: center; gap: .75rem; border-radius: .75rem; padding: .75rem; color: #334155; font-size: .875rem; font-weight: 600; text-align: left; }
+.mobile-nav-link:hover { background: #f0fdfa; color: #0f766e; }

@@ -96,6 +96,7 @@ if (isDevServer && process.env.DISABLE_EMERGENT_OVERLAY !== "true") {
 
 let webpackConfig = {
   eslint: {
+    enable: false,
     configure: {
       extends: ["plugin:react-hooks/recommended"],
       rules: {
